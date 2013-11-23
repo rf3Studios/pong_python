@@ -51,6 +51,7 @@ PLAYER_RIGHT = 1
 
 
 def spawn_ball(direction):
+    """Creates a new ball moving in the direction that is passed"""
     global ball_pos, ball_vel
 
     ball_pos = [FRAME_WIDTH // 2, FRAME_HEIGHT // 2]
@@ -65,6 +66,7 @@ def spawn_ball(direction):
 
 
 def new_game():
+    """Sets up and starts a new game"""
     global paddle_left_pos, paddle_right_pos, paddle_left_vel, paddle_right_vel
     global score_left, score_right
 
@@ -124,6 +126,7 @@ def keydown_handler(event_key):
     elif event_key == 119:
         paddle_left_vel = -PAD_VELOCITY
 
+    # Right player paddle
     if event_key == 274:
         paddle_right_vel = PAD_VELOCITY
     elif event_key == 273:
@@ -134,9 +137,11 @@ def keyup_handler(event_key):
     """Invoked when the user releases a pressed key on the keyboard"""
     global paddle_left_vel, paddle_right_vel
 
+    # Left player paddle
     if event_key == 119 or event_key == 115:
         paddle_left_vel = 0
 
+    # Right player paddle
     if event_key == 273 or event_key == 274:
         paddle_right_vel = 0
 
@@ -151,8 +156,8 @@ def frame():
     # Set the title
     pygame.display.set_caption(GAME_TITLE)
 
-    # Set clock
-    _clock = pygame.time.Clock()
+    # Set game clock
+    _fps_clock = pygame.time.Clock()
 
     # Game loop
     while True:
@@ -169,10 +174,11 @@ def frame():
 
         # FPS limit to 60 -- essentially, setting the draw handler timing
         # it micro pauses so while loop only runs 60 times a second max.
-        _clock.tick(60)
+        _fps_clock.tick(60)
 
 # Helpers
 def render_ball(surface):
+    """Sets up and draws the ball on the surface"""
     global ball_pos, ball_vel
 
     ball_pos[0] = int(ball_pos[0])
@@ -205,12 +211,14 @@ def render_ball(surface):
     ball_pos[0] += ball_vel[0]
     ball_pos[1] += ball_vel[1]
 
-    print(ball_vel)
-
     pygame.draw.circle(surface, WHITE_COLOR, (int(ball_pos[0]), int(ball_pos[1])), BALL_RADIUS, 0)
 
 
 def render_paddles(surface):
+    """
+    Draws the paddles and makes sure that they stop when they reach
+    the top and bottom of the playing area
+    """
     global paddle_left_vel, paddle_right_vel, paddle_left_pos, paddle_right_pos
 
     # Update paddle velocity
@@ -235,6 +243,7 @@ def draw_text_helper(surface, value, pos, size, color, font="sans-serif"):
 
 
 def player_score(player):
+    """Helper function that adds one to the player score"""
     global score_left, score_right
 
     if player == PLAYER_LEFT:
